@@ -4,18 +4,24 @@
   "description": "Teste de Rest api",
   "main": "server.js",
   "scripts": {
-    "sevrer": "nodemon server.js",
+    "server": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Víctor Ross",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "mysql2": "^2.2.5"
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "nodemon": "^2.0.7"
   }
 }

@@ -1,38 +1,41 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const login = require('../middleware/login');
 
-// RETORNA TODOS OS PRODUTOS
-router.get('/', (req, res, next) => {
-  res.status(200).send({ message: 'Retorna todos os produtos' });
-});
+const produtosController = require('../controllers/produtosController');
 
-// INSERE UM PRODUTO
-router.post('/', (req, res, next) => {
-  const { nome, preco } = req.body;
-
-  res.status(201).send({ mensagem: 'Insere um produto', produtoCriado: { nome, preco } });
-});
-
-// RETORNA DADOS DE UM PRODUTO
-router.get('/:id_produto', (req, res, next) => {
-  const id = req.params.id_produto;
-
-  if(id === 'especial') {
-    res.status(200).send({ mensagem: 'Você descobriu o id especial', id: id });
-  } else {
-    res.status(200).send({ mensagem: 'Detalhes de 1 produto', id: id });
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function(req, file, cb) {
+    let data = new Date().toISOString().replace(/:/g,'-')+'-';
+    cb(null, data + file.originalname);
   }
-
 });
 
-// ALTERA UM PRODUTO
-router.patch('/', (req, res, next) => {
-  res.status(201).send({ mensagem: 'Produto alterado' });
+const fileFilter = (req, file, cb) => {
+  if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
+
+const upload = multer({ 
+  storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter
 });
 
-// EXCLUI UM PRODUTO
-router.delete('/', (req, res, next) => {
-  res.status(201).send({ mensagem: 'Produto excluído' });
-})
+
+router.get('/', produtosController.getProdutos);
+router.post('/', login.obrigatorio, upload.single('produto_imagem'), produtosController.postProduto);
+router.get('/:id_produto', produtosController.getUmProduto);
+router.patch('/', login.obrigatorio, produtosController.updateProduto);
+router.delete('/', login.obrigatorio, produtosController.deleteProduto);
 
 module.exports = router;
