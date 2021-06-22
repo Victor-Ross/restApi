@@ -1,13 +1,12 @@
 const mysql = require('mysql2');
-require('dotenv/config');
 
 
 var pool = mysql.createPool({
-  "user": "victor",
-  "password": "impressora",
-  "database": "ecommerce",
-  "host": "localhost",
-  "port": 3306
+  "user": process.env.MYSQL_USER,
+  "password": process.env.MYSQL_PASSWORD,
+  "database": process.env.MYSQL_DATABASE,
+  "host": process.env.MYSQL_HOST,
+  "port": process.env.MYSQL_PORT
 });
 
 exports.pool = pool;

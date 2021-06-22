@@ -65,7 +65,7 @@ exports.loginUsuario = (req, res, next) => {
           const token = jwt.sign({
             id_usuario: results[0].id_usuario,
             email: results[0].email
-          }, 'segredo',
+          }, process.env.JWT_KEY,
           { expiresIn: '1h' });
 
           return res.status(200).send({ mensagem: 'Autenticado com sucesso', token });
